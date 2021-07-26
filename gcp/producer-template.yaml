@@ -1,0 +1,38 @@
+#kubectl apply -f producer-template.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: java-kafka-producer
+  name: java-kafka-producer
+  namespace: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: java-kafka-producer
+  template:
+    metadata:
+      labels:
+        app: java-kafka-producer
+
+    spec:
+      containers:
+        - name: java-kafka-producer
+          image: quay.io/strimzi-examples/java-kafka-producer:latest
+          env:
+            - name: BOOTSTRAP_SERVERS
+              value: my-cluster-kafka-bootstrap:9092
+            - name: TOPIC
+              value: gcp-result
+            - name: DELAY_MS
+              value: "1000"
+            - name: LOG_LEVEL
+              value: "INFO"
+            - name: MESSAGE_COUNT
+              value: "1000000"
+            - name: PRODUCER_ACKS
+              value: "all"
+            - name: ADDITIONAL_CONFIG
+              value: |
+                retries=100
