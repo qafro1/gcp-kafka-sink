@@ -9,11 +9,11 @@ public class Routes extends RouteBuilder {
 
         
         // Invokes a simple greeting endpoint every 10 seconds
-        from("kafka:incident-all?brokers={{kafka.brokers}}&groupId=gcpreader")
+        from("kafka:gcp-result?brokers={{kafka.brokers}}&groupId=gcpreader")
             .filter().jsonpath("$[?(@.platform == 'gcp')]" )
             .to("json-validator:gcpschema.json")
             .log("SENT -> ${body}")
-            .to("google-pubsub://camel-k-metrics:gcp-topic")
+            .to("kafka:gcp-result")
            ;
            
       
